@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import './App.css'; // Import the CSS file for styling
 
 const App = () => {
   const [tasks, setTasks] = useState([]);
@@ -17,9 +18,9 @@ const App = () => {
   };
 
   return (
-    <div>
+    <div className="app">
       <h1>To-Do List</h1>
-      <div>
+      <div className="input-container">
         <input
           type="text"
           value={newTask}
@@ -30,9 +31,8 @@ const App = () => {
       </div>
       <ul>
         {tasks.map((task, index) => (
-          <li key={index}>
+          <li key={index} className="task" onClick={() => removeTask(index)}>
             {task}
-            <button onClick={() => removeTask(index)}>Remove</button>
           </li>
         ))}
       </ul>
