@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './App.css'; // Import the CSS file for styling
+import './App.css';
 
 const App = () => {
   const [tasks, setTasks] = useState([]);
@@ -9,6 +9,12 @@ const App = () => {
     if (newTask.trim() === '') return;
     setTasks([...tasks, newTask]);
     setNewTask('');
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      addTask();
+    }
   };
 
   const removeTask = (index) => {
@@ -25,6 +31,7 @@ const App = () => {
           type="text"
           value={newTask}
           onChange={(e) => setNewTask(e.target.value)}
+          onKeyPress={handleKeyPress} // Handle the Enter key press event
           placeholder="Enter task..."
         />
         <button onClick={addTask}>Add</button>
