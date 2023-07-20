@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import './App.css';
 
 const App = () => {
-  const [tasks, setTasks] = useState([]);
+  const [inProgressTasks, setInProgressTasks] = useState([]);
+  const [completedTasks, setCompletedTasks] = useState([]);
   const [newTask, setNewTask] = useState('');
 
   const addTask = () => {
     if (newTask.trim() === '') return;
-    setTasks([...tasks, newTask]);
+    setInProgressTasks([...inProgressTasks, newTask]);
     setNewTask('');
   };
 
@@ -17,10 +18,23 @@ const App = () => {
     }
   };
 
-  const removeTask = (index) => {
-    const updatedTasks = [...tasks];
-    updatedTasks.splice(index, 1);
-    setTasks(updatedTasks);
+  const moveToCompleted = (index) => {
+    const updatedInProgressTasks = [...inProgressTasks];
+    const completedTask = updatedInProgressTasks.splice(index, 1)[0];
+    setInProgressTasks(updatedInProgressTasks);
+    setCompletedTasks([...completedTasks, completedTask]);
+  };
+
+  const removeTask = (index, isCompletedTask) => {
+    if (isCompletedTask) {
+      const updatedCompletedTasks = [...completedTasks];
+      updatedCompletedTasks.splice(index, 1);
+      setCompletedTasks(updatedCompletedTasks);
+    } else {
+      const updatedInProgressTasks = [...inProgressTasks];
+      updatedInProgressTasks.splice(index, 1);
+      setInProgressTasks(updatedInProgressTasks);
+    }
   };
 
   return (
@@ -31,18 +45,33 @@ const App = () => {
           type="text"
           value={newTask}
           onChange={(e) => setNewTask(e.target.value)}
-          onKeyPress={handleKeyPress} // Handle the Enter key press event
+          onKeyPress={handleKeyPress}
           placeholder="Enter task..."
         />
         <button onClick={addTask}>Add</button>
       </div>
-      <ul>
-        {tasks.map((task, index) => (
-          <li key={index} className="task" onClick={() => removeTask(index)}>
-            {task}
-          </li>
-        ))}
-      </ul>
+      <div className="sections">
+        <div className="section">
+          <h2>In Progress</h2>
+          <ul>
+            {inProgressTasks.map((task, index) => (
+              <li key={index} className="task" onClick={() => moveToCompleted(index)}>
+                {task}
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div className="section">
+          <h2>Completed</h2>
+          <ul>
+            {completedTasks.map((task, index) => (
+              <li key={index} className="task" onClick={() => removeTask(index, true)}>
+                {task}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
     </div>
   );
 };
